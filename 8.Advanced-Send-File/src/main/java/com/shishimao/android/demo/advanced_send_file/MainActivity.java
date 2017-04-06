@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void remote(final Receiver receiver) {
-                            try {
+
                                 receivers.add(receiver);
 
                                 receiver.addObserver(new Receiver.ReceiverObserver() {
@@ -191,9 +191,7 @@ public class MainActivity extends AppCompatActivity {
                                 });
 
                                 receiver.response();
-                            } catch (Exception e) {
-                                Log.e(TAG,e.getMessage());
-                            }
+
                         }
 
                         @Override
