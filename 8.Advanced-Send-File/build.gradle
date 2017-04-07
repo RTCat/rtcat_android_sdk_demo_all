@@ -38,4 +38,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.nbsp:library:1.09'
     compile project(':RTCat-Android-SDK')
+    compile project(':Config')
 }

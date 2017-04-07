@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.shishimao.android.sdk.Config;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.RTCat;
 import com.shishimao.sdk.Receiver;
@@ -112,5 +112,13 @@ public class MainActivity extends AppCompatActivity {
     public void broadcastMessage(String msg){
         //TODO broadcast message
         session.broadcastMessage(msg);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(cat != null) {
+            cat.release();
+        }
     }
 }

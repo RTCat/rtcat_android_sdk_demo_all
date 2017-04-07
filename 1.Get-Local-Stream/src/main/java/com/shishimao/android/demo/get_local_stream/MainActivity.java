@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.LocalStream;
 import com.shishimao.sdk.RTCat;
-import com.shishimao.sdk.apprtc.AppRTCAudioManager;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.audio.RTCatAudioManager;
+import com.shishimao.sdk.utils.RTCatLogging;
 import com.shishimao.sdk.view.VideoPlayer;
 
 import org.webrtc.RendererCommon;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         btTakePicture = (Button) findViewById(R.id.bt_take_picture);
 
 
-        cat = new RTCat(MainActivity.this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE,RTCat.CodecSupported.H264, L.VERBOSE);
+        cat = new RTCat(MainActivity.this,true,true,true,false, RTCatAudioManager.AudioDevice.SPEAKER_PHONE,RTCat.CodecSupported.H264, RTCatLogging.VERBOSE);
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
             public void error(Errors errors) {
@@ -69,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void createStream(View view){
         btGetStream.setEnabled(false);
-        cat.initVideoPlayer(videoPlayer);
+//        cat.initVideoPlayer(videoPlayer);
 
-        localStream = cat.createStream(true,true,15,RTCat.VideoFormat.Lv9, LocalStream.CameraFacing.FRONT);
+        localStream = cat.createStream(true,true,15, LocalStream.VideoFormat.Lv9,LocalStream.CameraFacing.FRONT);
 
         localStream.addObserver(new LocalStream.StreamObserver() {
             @Override

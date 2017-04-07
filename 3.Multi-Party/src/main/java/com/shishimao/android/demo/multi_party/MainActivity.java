@@ -7,7 +7,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.shishimao.android.sdk.Config;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.AbstractStream;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.LocalStream;
@@ -16,10 +16,10 @@ import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
-import com.shishimao.sdk.apprtc.AppRTCAudioManager;
+import com.shishimao.sdk.audio.RTCatAudioManager;
 import com.shishimao.sdk.http.RTCatRequests;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.log.WebRTCLog;
+import com.shishimao.sdk.utils.RTCatLogging;
 import com.shishimao.sdk.view.VideoPlayer;
 import com.shishimao.sdk.view.VideoPlayerLayout;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         videoContainer = (RelativeLayout)findViewById(R.id.video_container);
 
-        cat = new RTCat(MainActivity.this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE, RTCat.CodecSupported.VP8, L.VERBOSE);
+        cat = new RTCat(MainActivity.this,true,true,true,false, RTCatAudioManager.AudioDevice.SPEAKER_PHONE, RTCat.CodecSupported.VP8, RTCatLogging.ERROR);
 
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
         VideoPlayerLayout videoLayout = new VideoPlayerLayout(this);
         VideoPlayer videoPlayer = new VideoPlayer(this);
-        cat.initVideoPlayer(videoPlayer);
+//        cat.initVideoPlayer(videoPlayer);
 
         if(ePos >= 0){
             PosSize ps = getPosition(ePos);
@@ -218,18 +218,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
-        if(session != null)
-        {
-            session.disconnect();
-        }
-
-
-        if(localStream != null)
-        {
-            localStream.dispose();
-        }
-
 
         for (VideoPlayer renderer:videoPlayers)
         {
@@ -312,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                createVideoPlayer(stream,receiver.getSenderToken());
+                                createVideoPlayer(stream,receiver.getOpposite());
                             }
                         });
 

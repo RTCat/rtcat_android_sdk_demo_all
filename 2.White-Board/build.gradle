@@ -29,5 +29,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile project(':RTCat-Android-SDK')
+    compile project(':Config')
     testCompile 'junit:junit:4.12'
 }
