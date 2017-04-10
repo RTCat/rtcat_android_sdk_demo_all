@@ -12,8 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shishimao.android.sdk.Config;
-import com.shishimao.sdk.Configs;
+
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.LocalStream;
 import com.shishimao.sdk.RTCat;
@@ -21,10 +21,11 @@ import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
 import com.shishimao.sdk.apprtc.AppRTCAudioManager;
+import com.shishimao.sdk.audio.RTCatAudioManager;
 import com.shishimao.sdk.http.RTCatRequests;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.log.WebRTCLog;
+import com.shishimao.sdk.utils.RTCatLogging;
 import com.shishimao.sdk.view.VideoPlayer;
 import com.shishimao.sdk.view.VideoPlayerLayout;
 
@@ -148,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         rbtH264.setEnabled(false);
         btConnect.setEnabled(false);
 
-        cat = new RTCat(this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE,codec, L.VERBOSE);
+        cat = new RTCat(this,true,true,true,false, RTCatAudioManager.AudioDevice.SPEAKER_PHONE,codec, RTCatLogging.VERBOSE);
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
             public void error(Errors errors) {
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         cat.initVideoPlayer(localVideoRenderer);
         cat.initVideoPlayer(remoteVideoRenderer);
 
-        localStream = cat.createStream(true,true,15,RTCat.VideoFormat.Lv3, LocalStream.CameraFacing.FRONT);
+        localStream = cat.createStream(true,true,15, LocalStream.VideoFormat.Lv7, LocalStream.CameraFacing.FRONT);
         localStream.addObserver(new LocalStream.StreamObserver() {
 
             @Override
@@ -365,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                t(receiver.getFrom() + " stream");
+                                t(receiver.getOpposite() + " stream");
 
                                 stream.play(remoteVideoRenderer);
                             }
@@ -408,10 +409,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void close() {
-                    if(session.getState() == Configs.ConnectState.CONNECTED)
-                    {
-                        session.sendTo(localStream,false,null,sender.getTo());
-                    }
+
                 }
 
                 @Override

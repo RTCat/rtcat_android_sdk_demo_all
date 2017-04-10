@@ -224,12 +224,9 @@ public class MainActivity extends AppCompatActivity {
             renderer.release();
         }
 
-        if(cat != null)
-        {
+        if(cat != null) {
             cat.release();
         }
-
-        l("EXIT");
 
         super.onDestroy();
 

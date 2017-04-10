@@ -5,8 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.shishimao.android.sdk.Config;
-import com.shishimao.sdk.Configs;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.LocalStream;
 import com.shishimao.sdk.RTCat;
@@ -14,14 +13,16 @@ import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
 import com.shishimao.sdk.apprtc.AppRTCAudioManager;
+import com.shishimao.sdk.audio.RTCatAudioManager;
 import com.shishimao.sdk.http.RTCatRequests;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.log.WebRTCLog;
+import com.shishimao.sdk.utils.RTCatLogging;
 import com.shishimao.sdk.view.VideoPlayer;
 import com.shishimao.sdk.view.VideoPlayerLayout;
 
 import org.json.JSONObject;
+import org.webrtc.RendererCommon;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         localVideoPlayer = (VideoPlayer) findViewById(R.id.local_video_render);
+//        localVideoPlayer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
         localRenderLayout = (VideoPlayerLayout) findViewById(R.id.local_video_layout);
         localRenderLayout.setPosition(0,0,100,100);
 
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         remoteRenderLayout = (VideoPlayerLayout) findViewById(R.id.remote_video_layout);
         remoteRenderLayout.setPosition(0,0,0,0);
 
-        cat = new RTCat(MainActivity.this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE ,RTCat.CodecSupported.VP8, L.VERBOSE);
+        cat = new RTCat(MainActivity.this,true,true,true,false, RTCatAudioManager.AudioDevice.SPEAKER_PHONE ,RTCat.CodecSupported.VP8, RTCatLogging.VERBOSE);
 
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public void createLocalStream(){
         cat.initVideoPlayer(localVideoPlayer);
 
-        localStream = cat.createStream(true,true,15,RTCat.VideoFormat.Lv0, LocalStream.CameraFacing.FRONT);
+        localStream = cat.createStream(true,true,15, LocalStream.VideoFormat.Lv0, LocalStream.CameraFacing.FRONT);
 
         localStream.addObserver(new LocalStream.StreamObserver() {
             @Override
@@ -189,12 +191,13 @@ public class MainActivity extends AppCompatActivity {
                                             public void run() {
                                                 if(isRemotePlay)
                                                     return;
-                                                t(receiver.getFrom() + " stream");
+                                                t(receiver.getOpposite() + " stream");
                                                 cat.initVideoPlayer(remoteVideoPlayer);
                                                 remoteRenderLayout.setPosition(0,0,100,100);
                                                 localRenderLayout.setPosition(60,0,40,40);
                                                 localVideoPlayer.setZOrderMediaOverlay(true);
                                                 localVideoPlayer.requestLayout();
+                                                remoteVideoPlayer.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
                                                 stream.play(remoteVideoPlayer);
                                                 isRemotePlay = true;
                                             }
@@ -236,10 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void close() {
-                                    if(session.getState() == Configs.ConnectState.CONNECTED)
-                                    {
-                                        session.sendTo(localStream,false,null,sender.getTo());
-                                    }
+
                                 }
 
                                 @Override

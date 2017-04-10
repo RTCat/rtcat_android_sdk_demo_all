@@ -11,15 +11,15 @@ import android.widget.TextView;
 
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
-import com.shishimao.android.sdk.Config;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.RTCat;
 import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
 import com.shishimao.sdk.http.RTCatRequests;
+import com.shishimao.sdk.log.WebRTCLog;
 
 import org.json.JSONObject;
 
@@ -114,13 +114,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void in(String token) {
                             JSONObject attr = new JSONObject();
-                            try {
-                                attr.put("type", "main");
-                                attr.put("name", "old wang");
-                            } catch (Exception e) {
-
-                            }
-
                             session.sendTo(null,true,attr, token);
                         }
 
@@ -132,12 +125,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void connected(ArrayList wits) {
                             JSONObject attr = new JSONObject();
-                            try {
-                                attr.put("type", "main");
-                                attr.put("name", "old wang");
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             session.send(null,true,attr);
                         }
 
@@ -255,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
     public void onSendFile(View view){
         fileSend = new File(sendFilePath);
 
-        Log.i(TAG,"file name: "+ fileSend.getName() + "file size: " + fileSend.length() + "file path: " + fileSend.getAbsolutePath());
+        Log.i(TAG,"file name: "+ fileSend.getName() + "\n file size: " + fileSend.length() + "\n file path: " + fileSend.getAbsolutePath());
 
         for (Sender sender:senders
                 ) {

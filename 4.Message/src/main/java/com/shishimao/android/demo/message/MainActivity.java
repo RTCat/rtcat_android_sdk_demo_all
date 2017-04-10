@@ -8,17 +8,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shishimao.android.sdk.Config;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.RTCat;
 import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
 import com.shishimao.sdk.apprtc.AppRTCAudioManager;
 import com.shishimao.sdk.http.RTCatRequests;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.log.WebRTCLog;
 
 import org.json.JSONObject;
 
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         editText = (EditText)findViewById(R.id.editText);
         textView = (TextView) findViewById(R.id.textView);
 
-        cat = new RTCat(MainActivity.this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE,RTCat.CodecSupported.H264, L.VERBOSE);
+        cat = new RTCat(this);
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
             public void init() {
@@ -123,12 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-
-        if(session != null)
-        {
-            session.disconnect();
-        }
-
 
         if(cat != null)
         {
@@ -215,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                textView.append(receiver.getSenderToken().substring(0,7) + ":" + message + "\r\n");
+                                textView.append(receiver.getOpposite().substring(0,7) + ":" + message + "\r\n");
                             }
                         });
                     }

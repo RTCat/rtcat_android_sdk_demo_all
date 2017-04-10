@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shishimao.android.sdk.Config;
+import com.shishimao.android.demo.config.Config;
 import com.shishimao.sdk.AbstractStream;
 import com.shishimao.sdk.Errors;
 import com.shishimao.sdk.LocalStream;
@@ -17,10 +17,11 @@ import com.shishimao.sdk.Receiver;
 import com.shishimao.sdk.RemoteStream;
 import com.shishimao.sdk.Sender;
 import com.shishimao.sdk.Session;
-import com.shishimao.sdk.WebRTCLog;
 import com.shishimao.sdk.apprtc.AppRTCAudioManager;
+import com.shishimao.sdk.audio.RTCatAudioManager;
 import com.shishimao.sdk.http.RTCatRequests;
-import com.shishimao.sdk.tools.L;
+import com.shishimao.sdk.log.WebRTCLog;
+import com.shishimao.sdk.utils.RTCatLogging;
 import com.shishimao.sdk.view.VideoPlayer;
 import com.shishimao.sdk.view.VideoPlayerLayout;
 
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         remoteLogText = (TextView)findViewById(R.id.remote_log_text);
 
 
-        cat = new RTCat(MainActivity.this,true,true,true,false, AppRTCAudioManager.AudioDevice.SPEAKER_PHONE, RTCat.CodecSupported.VP8, L.VERBOSE);
+        cat = new RTCat(MainActivity.this,true,true,true,false, RTCatAudioManager.AudioDevice.SPEAKER_PHONE, RTCat.CodecSupported.VP8, RTCatLogging.VERBOSE);
 
         cat.addObserver(new RTCat.RTCatObserver() {
             @Override
